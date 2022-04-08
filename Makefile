@@ -16,8 +16,8 @@ run-nginx-quictls: build-nginx-quictls-image build-nginx-quic-network server.crt
 	sudo docker run --rm --name nginx-quictls \
 		--network=nginx-quic \
 		-p 443:443/tcp -p 443:443/udp \
-		-v ${PWD}/nginx.conf:/etc/nginx/nginx.conf:ro \
-		-v ${PWD}/docroot:/var/www/html:ro \
+		-v ${PWD}/nginx-quictls/nginx.conf:/etc/nginx/nginx.conf:ro \
+		-v ${PWD}/nginx-quictls/docroot:/var/www/html:ro \
 		-v ${PWD}/server.crt:/etc/nginx/cert.crt:ro \
 		-v ${PWD}/server.key:/etc/nginx/cert.key:ro \
 		nginx-quictls
