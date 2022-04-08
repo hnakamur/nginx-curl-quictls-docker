@@ -1,3 +1,6 @@
+all: server.crt
+	docker-compose up --abort-on-container-exit
+
 server.crt:
 	openssl req -new -newkey rsa:2048 -sha1 -x509 -nodes \
 		-set_serial 1 \
@@ -19,16 +22,16 @@ run-nginx-quictls: build-nginx-quictls-image build-nginx-quic-network server.crt
 		-v ${PWD}/server.key:/etc/nginx/cert.key:ro \
 		nginx-quictls
 
-run-curl-quiche-http3: build-curl-quiche-image
+run-curl-quictls-http3: build-curl-quictls-image
 	( \
 	nginx_ip=$$(docker inspect --format '{{ $$network := index .NetworkSettings.Networks "nginx-quic" }}{{ $$network.IPAddress }}' nginx-quictls); \
-	docker run --rm --network=nginx-quic curl-quiche -kv --http3 https://$${nginx_ip} \
+	docker run --rm --network=nginx-quic curl-quictls -kv --http3 https://$${nginx_ip} \
 	)
 
-run-curl-quiche-http2: build-curl-quiche-image
+run-curl-quictls-http2: build-curl-quictls-image
 	( \
 	nginx_ip=$$(docker inspect --format '{{ $$network := index .NetworkSettings.Networks "nginx-quic" }}{{ $$network.IPAddress }}' nginx-quictls); \
-	docker run --rm --network=nginx-quic curl-quiche -kv https://$${nginx_ip} \
+	docker run --rm --network=nginx-quic curl-quictls -kv https://$${nginx_ip} \
 	)
 
 do-build-nginx-quictls-image:
@@ -38,9 +41,9 @@ build-nginx-quictls-image:
 	[ -n "$$(docker images -q nginx-quictls)" ] || \
 	(cd nginx-quictls; docker build -t nginx-quictls .)
 
-build-curl-quiche-image:
-	[ -n "$$(docker images -q curl-quiche)" ] || \
-	(cd curl-quiche; docker build -t curl-quiche .)
+build-curl-quictls-image:
+	[ -n "$$(docker images -q curl-quictls)" ] || \
+	(cd curl-quictls; docker build -t curl-quictls .)
 
 build-nginx-quic-network:
 	[ -n "$$(docker network ls -q -f 'name=^nginx-quic$$')" ] || \
