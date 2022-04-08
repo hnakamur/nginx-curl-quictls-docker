@@ -32,11 +32,11 @@ run-curl-quiche-http2: build-curl-quiche-image
 	)
 
 do-build-nginx-quictls-image:
-	docker build -t nginx-quictls .
+	(cd nginx-quictls; docker build -t nginx-quictls .)
 
 build-nginx-quictls-image:
 	[ -n "$$(docker images -q nginx-quictls)" ] || \
-	docker build -t nginx-quictls .
+	(cd nginx-quictls; docker build -t nginx-quictls .)
 
 build-curl-quiche-image:
 	[ -n "$$(docker images -q curl-quiche)" ] || \
