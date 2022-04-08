@@ -3,7 +3,7 @@ FROM ubuntu:20.04
 ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update
-RUN apt-get install -y build-essential mercurial git cmake libpcre3-dev zlib1g-dev
+RUN apt-get install -y build-essential mercurial git cmake libpcre3-dev zlib1g-dev libssl-dev
 
 WORKDIR /src
 RUN git clone https://github.com/google/boringssl
