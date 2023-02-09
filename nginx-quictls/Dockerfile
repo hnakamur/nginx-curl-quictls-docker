@@ -1,4 +1,4 @@
-FROM ubuntu:20.04
+FROM ubuntu:22.04
 
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -6,9 +6,9 @@ RUN apt-get update
 RUN apt-get install -y build-essential mercurial git cmake libpcre3-dev zlib1g-dev
 
 WORKDIR /src
-RUN git clone -b OpenSSL_1_1_1n+quic --depth 1 \
+RUN git clone -b openssl-3.0.8+quic --depth 1 \
         https://github.com/quictls/openssl \
-        quictls-1.1.1n
+        quictls-3.0.8+quic
 RUN hg clone -b quic https://hg.nginx.org/nginx-quic
 WORKDIR /src/nginx-quic
 RUN ./auto/configure --prefix=/usr \
@@ -17,8 +17,8 @@ RUN ./auto/configure --prefix=/usr \
                      --with-http_v2_module \
                      --with-http_v3_module \
                      --with-stream_quic_module \
-                     --with-openssl=../quictls-1.1.1n
-RUN make
+                     --with-openssl=../quictls-3.0.8+quic
+RUN make -j
 RUN make install
 
 RUN mkdir -p /etc/nginx /var/log/nginx

@@ -1,5 +1,5 @@
 all: server.crt
-	docker-compose up --abort-on-container-exit
+	docker compose up --abort-on-container-exit
 
 server.crt:
 	openssl req -new -newkey rsa:2048 -sha1 -x509 -nodes \
