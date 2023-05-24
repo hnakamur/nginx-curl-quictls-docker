@@ -3,21 +3,19 @@ FROM ubuntu:22.04
 ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update
-RUN apt-get install -y build-essential mercurial git cmake libpcre3-dev zlib1g-dev
+RUN apt-get install -y build-essential git cmake libpcre3-dev zlib1g-dev
 
 WORKDIR /src
-RUN git clone -b openssl-3.0.8+quic --depth 1 \
+RUN git clone -b openssl-3.0.8-quic1 --depth 1 \
         https://github.com/quictls/openssl \
-        quictls-3.0.8+quic
-RUN hg clone -b quic https://hg.nginx.org/nginx-quic
-WORKDIR /src/nginx-quic
+        openssl-3.0.8-quic1
+RUN git clone --depth 1 -b release-1.25.0 https://github.com/nginx/nginx
+WORKDIR /src/nginx
 RUN ./auto/configure --prefix=/usr \
                      --with-debug \
-                     --build=commit-$(hg id -i) \
                      --with-http_v2_module \
                      --with-http_v3_module \
-                     --with-stream_quic_module \
-                     --with-openssl=../quictls-3.0.8+quic
+                     --with-openssl=../openssl-3.0.8-quic1
 RUN make -j
 RUN make install
 

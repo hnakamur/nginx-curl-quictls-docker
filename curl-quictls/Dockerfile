@@ -8,10 +8,10 @@ RUN apt-get install -y build-essential git autoconf libtool pkg-config \
 
 # Build quictls
 WORKDIR /src
-RUN git clone -b openssl-3.0.8+quic --depth 1 \
+RUN git clone -b openssl-3.0.8-quic1 --depth 1 \
         https://github.com/quictls/openssl \
-        quictls-3.0.8+quic
-WORKDIR /src/quictls-3.0.8+quic
+        openssl-3.0.8-quic1
+WORKDIR /src/openssl-3.0.8-quic1
 RUN ./config enable-tls1_3 \
     --prefix=/usr --openssldir=/usr/lib/ssl --libdir=lib/$(uname -m)-linux-gnu \
     no-idea no-mdc2 no-rc5 no-zlib no-ssl3 enable-unit-test no-ssl3-method enable-rfc3779 enable-cms
@@ -20,7 +20,7 @@ RUN make install
 
 # Build nghttp3
 WORKDIR /src
-RUN git clone --depth 1 -b v0.8.0 https://github.com/ngtcp2/nghttp3
+RUN git clone --depth 1 -b v0.11.0 https://github.com/ngtcp2/nghttp3
 WORKDIR /src/nghttp3
 RUN autoreconf -fi
 RUN ./configure --prefix=/usr --libdir=/usr/lib/$(uname -m)-linux-gnu --enable-lib-only
@@ -29,7 +29,7 @@ RUN make install
 
 # Build ngtcp2
 WORKDIR /src
-RUN git clone --depth 1 -b v0.13.0 https://github.com/ngtcp2/ngtcp2
+RUN git clone --depth 1 -b v0.15.0 https://github.com/ngtcp2/ngtcp2
 WORKDIR /src/ngtcp2
 RUN autoreconf -fi
 RUN ./configure --prefix=/usr --libdir=/usr/lib/$(uname -m)-linux-gnu --enable-lib-only
