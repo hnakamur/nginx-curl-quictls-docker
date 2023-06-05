@@ -8,10 +8,10 @@ RUN apt-get install -y build-essential git autoconf libtool pkg-config \
 
 # Build quictls
 WORKDIR /src
-RUN git clone -b openssl-3.0.8-quic1 --depth 1 \
+RUN git clone -b OpenSSL_1_1_1u+quic --depth 1 \
         https://github.com/quictls/openssl \
-        openssl-3.0.8-quic1
-WORKDIR /src/openssl-3.0.8-quic1
+        openssl-1.1.1u-quic
+WORKDIR /src/openssl-1.1.1u-quic
 RUN ./config enable-tls1_3 \
     --prefix=/usr --openssldir=/usr/lib/ssl --libdir=lib/$(uname -m)-linux-gnu \
     no-idea no-mdc2 no-rc5 no-zlib no-ssl3 enable-unit-test no-ssl3-method enable-rfc3779 enable-cms
